@@ -1,0 +1,16 @@
+Installation minimale (Core) 
+
+Installation avec graphique (Complète)
+
+pour chercher les fonctionnnalités et les rôles 
+	get-windowsfeature   *gui*
+
+Minimale ===> complète ===> via les commandes PowerShell
+install-WindowsFeature  Server-gui-mgmt-infra,Server-gui-shell
+
+
+Complète ===> minimale ===> PS ou supprimer les rôles et les fonctionnalités
+uninstall-WindowsFeature  Server-gui-mgmt-infra,Server-gui-shell
+
+
+les modules (chaque = ensemble des applets de commandes)

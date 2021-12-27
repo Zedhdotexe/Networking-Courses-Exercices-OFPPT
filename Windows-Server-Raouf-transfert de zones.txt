@@ -1,0 +1,110 @@
+connexion local
+connexion externe
+=
+DNS
+Wins
+Netbios
+les fichiers loccaux (hosts, lmhosts)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================
+les octets inchangebales 
+
+8<=   ----  <=15  ==> premier octet
+16<=  ----- <=23   ==> les deux premeirs octets
+>=24  ==> les trois octets
+
+
+test.ma
+10.11.128.0/18    ===> 11.10.in-addr.arpa
+172.16.192.0/23   ===> 16.172.in-addr.arpa 
+172.16.224.0/23   
+==================================================
+
+
+transfert de zone entre Primaire et secondaire 
+	---> selon les intervalles 
+	---> immédiatement ==> notification 
+Serial   ==> 
+refresh  ==> 15min 
+retry    ==> 10min
+expire   ==> 1j
+TTL      ==> 1H
+
+le transfert complet (AXFR)
+le tranfert incrementiel (IXFR)
+
+DC1(primaire) ===================================== DC2 (secondaire)
+SOA(Numéro de série=6)                                SOA(Numéro de série=6)
+apres 15min(refresh)  
+             <==========demande SOA================1
+	     2==========demande SOA================>   vérifier Numéro de série
+							si NS= pas de modofication
+	     <=======demande des modification======3	si NS#
+	     4==reponse contient les modification==>
+
+=============================================================
+
+DC1(primaire) ===================================== DC2 (secondaire)
+SOA(Numéro de série=6)                                SOA(Numéro de série=6)
+apres 15min(refresh)  
+             <==========demande SOA================
+	     pas de reponse
+apres retry(10min)
+             <==========demande SOA================
+	     pas de reponse
+
+apres retry(10min)
+             <==========demande SOA================
+	     pas de reponse
+apres retry(10min)
+             <==========demande SOA================
+	     pas de reponse
+apres retry(10min)
+             <==========demande SOA================
+	     pas de reponse
+apres retry(10min)
+             <==========demande SOA================
+	     pas de reponse
+................=> expire(1j) 
+	===> secondaire va déclarer que le primaire hors service
+	===> secondaire va continuer l'utilisation des donnes pendant  TTL(1h)
+========================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

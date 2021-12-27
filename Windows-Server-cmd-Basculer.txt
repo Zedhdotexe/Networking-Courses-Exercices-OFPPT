@@ -1,0 +1,47 @@
+commande PowerShell pour basculer d'une installation minimale à la version graphique
+
+	Install-WindowsFeature -IncludeAllSubFeature User-Interfaces-Infra -Source c:\mount 
+
+activer WinRM ( gestion à distance de Windows )
+	WinRM -qc
+
+configuration TCP/IP
+
+	Netsh interface ipv4 set address “Connexion au réseau local” static 10.10.10.10 255.255.255.0 New-NetIPAddress –InterfaceIndex 12 –IPAddress 10.10.10.10 –PrefixLength 24 
+
+	Netsh interface ipv4 set dnsservers “Connexion au réseau local” static 10.10.10.5 primary  Set-DNSClientServerAddress –InterfaceIndex 12 –ServerAddresses 10.10.10.5 
+
+
+renommer 
+
+	hostname ==> afficher le nom
+	netdom ==> renommer 
+
+		Netdom renamecomputer %nom_ordinateur% /newname:DC1-TRI
+
+firewall
+
+	netsh.exe firewall set service remoteadmin enable ALL
+
+
+Activation windows
+	Puisque les ordinateurs qui exécutent l'option d'installation minimale ne possèdent pas la console du Gestionnaire de serveur, 
+	vous pouvez également effectuer l'activation manuelle à l'aide de la commande 
+	slmgr.vbs
+	Utilisez la commande 
+	slmgr.vbs /ipk pour entrer la clé de produit 
+	et 
+	slmgr.vbs /ato pour effectuer l'activation une fois que la clé de produit a été installée. 
+
+
+
+
+
+
+
+
+
+
+
+
+ 

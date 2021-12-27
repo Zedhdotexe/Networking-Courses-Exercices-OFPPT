@@ -1,0 +1,97 @@
+                
+
+Les commandes de base
+
+les modes de configurations:
+switch>enable           mode utilisateur
+switch#                 mode privéligie
+  show .....   : afficher une configuration
+  copy  running-config    startup-config : Enregistrer la configuration
+  reload      : redemarrer le switch
+  configure terminal : entrer au mode de config global
+switch(config)#             mode de configuration global
+Switch(config-if)#          mode de configuration d'interface
+switch(config-line)#        mode de configuration de lignes
+switch(config-router)#      mode de configuration de routage
+exit : pour sortir du mode actuel 
+end  : n'imprte qu'il mode vers le mode privéligié
+---------------------------------------------------------
+les composants d'un switch/Routeur
+-RAM : memoire volatile : contient le fichier "running-config" (config en cours)
+-NVRAM : memoire Non-volatile : contient le fichier "startup-config" (config initial)
+-FLASH : Contient IOS (le systeme d'exploitation de switch)
+-ROM : Contient Bootloader (responsable de demarrage de switch)
+show flash
+show version
+show running-config : afficher la configuration en cours
+--------------------------------------------------------------
+les commande de base
+- Nom : Hostname SW1
+- bannière du jours : banner motd # message #
+- mots de passe du mode privéligie :
+   * clair : enable password pass@123
+   * crypté : enable secret pass@123
+- désactiver la recherche dns
+   * no ip domain-lookup
+- Enregistrer la configuration 
+   * copy running-config stratup-config
+   * Write 
+- configuration de switch:
+   * En local : la ligne console
+                line console 0
+                password pass@123
+                login
+   * distance : les lignes VTY 
+                line vty 0 15
+                password pass@123
+                login
+- Configurer le temps d'inactivité des lignes console et VTY
+          line .........
+          exec-timeout Min Seconde
+- crypter tous les mots de passe en clair
+  * service password-encryption
+-----------------------------------------------------------------
+configuration des lignes VTY ( a distance )
+ - Avec telnet
+    Etape 1 : Affecter une adresse IP au switch
+               interface vlan 1
+               ip address 192.168.1.100 255.255.255.0
+               no shutdown
+    Etape 2 : Gateway(passerelle) (en cas d'existance d'un routeur)
+               ip default-gateway @iprouteur
+    Etape 3 : Configuration de VTY
+              line vty 0 15
+              password vty@123
+              login
+    Etape 4 : tester l'acces a partir de PC
+              CMD => telnet  192.168.1.100
+
+NB : telnet n'est pas sécurisé (communication en clair), il est remplacé avec ssh
+
+- Avec SSH
+    Etape 1 : Affecter une adresse IP au switch
+               interface vlan 1
+               ip address 192.168.1.100 255.255.255.0
+               no shutdown
+    Etape 2 : Gateway(passerelle) (en cas d'existance d'un routeur)
+               ip default-gateway @iprouteur 
+    Etape 3 : Nom de switch
+              hostname SW1
+    Etape 4 : Nom de domaine
+              ip domain-name cisco.ma
+    Etape 5 : Compte utilisateur
+              username admin password ssh@123
+    Etape 6 : Creation des clés de chiffrement
+              crypto key generate rsa
+              <longueur clés: 512, 1024, 2048..>
+    Etape 7 : Activation de SSH dans les vty
+              line vty 0 15
+              transport input {ssh|telnet|all|none}
+              login local
+    ETape 8 : tester l'acces SSH a partir du pc
+              CMD => ssh -l admin 192.168.1.100
+-----------------------------------------------
+verification de ssh
+show ip ssh : information sur les clés de chiffrement
+show ssh : les sessions ouvertes avec ssh et la version
+----------------------------------------------

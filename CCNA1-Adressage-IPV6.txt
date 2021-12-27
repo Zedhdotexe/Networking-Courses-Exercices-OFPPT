@@ -1,0 +1,77 @@
+@iPV6 : représenté sur 128 bits (8 hextets), chaque hextet contient 16bits
+        2001:0DB8:ACAD:000A:EFAC:000B:DBE0:FFFF
+Regles de compression:
+  - Regle 1 : omettre les ZEROs en debut de chaque Hextets
+               2001:0DB8:ACAD:1:0002:00BC:0FE0:00FE
+               2001:DB8:ACAD:1:2:BC:FE0:FE
+  - Régle 2 : Omettre une seule fois la sequence la plus grande de ZEROs
+              et la remplacer par ::
+   Exemple    2001:0000:0000:0000:0BFE:0000:0000:00FE
+              2001:0:0:0:BFE:0:0:FE
+              2001::BFE::FE  (Adresse Ambigue)
+   Exemple    2001:0:0:BFE:0:0:FE:FF  
+              2001::BFE:0:0:FE:FF (Correcte)  
+              2001:0:0:BFE::FE:FF (Correcte)  
+Longueur de prefixe:
+       c'est une valeur permettant de detrminer le prefixe Réseau (NETID)
+         2001:0:0:0:BFE:0:0:FE/64  
+         2001:0:0:0   (represente NETID : prefixe réseau)
+         BFE:0:0:FE   (Represente HOSTID : ID interface)
+Type des adresses IPV6 
+       Monodiffusion Globale : Equivalent aux adresse PUBLIC IPV4
+                               payante + routable Sur internet
+                                2000 .....3FFF    (2000/3)  
+                                001|0 0000 0000 0000  : 2000
+                                001|1 1111 1111 1111  : 3FFF                           
+       locale Unique  :  Equivant aux adresse PRIVE IPV4
+                         Gratuite + Non routable sur internet + réseau privé
+                                FC00/7
+                                1111 110|0 0000 0000    : FC00
+                                1111 110|1 1111 1111    : FDFF
+       Link locale    : Sont des adresses utilisé SEULEMENT sur une liaison DIRECTE
+                                       E-----------R
+                                FE80/10
+                                1111 1110 10|00 0000     : FE80
+                                1111 1110 10|11 1111     : FEBF
+       Envoi en Boucle : Equivalent aux adresse de Bouclage IPV4 (127.X.X.X), 
+                         utilisé pour tester le fonctionnement de la carte réseau
+                         ::1 
+       Non spécifié    : Equivalent a l'adresse 0.0.0.0 en IPV4
+                         ::
+
+Découpage d'une adresse IPV6:
+                      48Bits : Prefixe Réseau (NID)
+                      16bits : SID
+                      64Bits : HID
+     2001:DB8:ACAD:3:1:2:3:4
+        SRO : 2001:DB8:ACAD:1:3:1:2:4
+        SR1 : 2001:DB8:ACAD:2:3:1:2:4
+        SR2 : 2001:DB8:ACAD:3:3:1:2:4
+        SR3 : 2001:DB8:ACAD:4:3:1:2:4
+  1 ---9, A ....F, 10, 11---19,1A--1F,20---9F,A0
+Activer le routage IPV6:
+          ipv6 unicast-routing
+processus EUI-64
+          - se base sur l'adresse MAC de la machine
+          - divise l'adresse MAC en Deux Partie 
+               @MAC : 1234-5678-91BC
+                      1234-56        78-91BC
+          - Insérer au milieu la valeur : FFFE
+                      1234:56FF:FE78:91BC
+          - inverser le bit N°7 (0 --> 1| 1 --> 0)
+                      0001 0010 0011 0100
+                      0001 0000 0011 0100
+                        1   0     3   4
+                      1034:56FF:FE78:91BC
+          - concaténer la valeur trouvée avec le prefixe réseau
+             2001:DB8:ACAD:A:1034:56FF:FE78:91BC
+Exercice : 
+Trouver l'@IPV6 avec la méthode EUI-64
+               @MAC  : FB3E-FEFF-ABCD
+      prefixe réseau : 2001:DB8:ACAD:B:
+                       FB3E:FEFF:FEFF:ABCD
+                       1111 1011 0011 1110
+                       1111 1001 0011 1110
+                        F    9    3    E 
+                       2001:DB8:ACAD:B:FB3E:FEFF:FEFF:ABCD
+
